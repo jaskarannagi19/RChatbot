@@ -6,7 +6,10 @@ import os, sys
 
 # Starting NLTK
 import nltk
-from nltk.book import *
+from nltk.book import text6
+
+for word in text6:
+    print(word, end = ' ' )
 
 # import stanfordnlp
 # nlp = stanfordnlp.Pipeline() # This sets up a default neural pipeline in English
@@ -21,7 +24,7 @@ from nltk.book import *
 # text4.generate()
 
 #sorted(set(text3))
-#nltk.chat.chatbots(
+# nltk.chat.chatbots()
 
 
 # NLTK: Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
