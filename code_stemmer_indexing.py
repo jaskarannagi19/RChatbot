@@ -56,6 +56,8 @@ def evaluate(text, segs):
     lexicon_size = sum(len(word) + 1 for word in set(words))
     return text_size + lexicon_size
 
+ 	
+
 
 '''Non-Deterministic Search Using Simulated Annealing: begin searching with phrase segmentations only; 
 randomly perturb the zeros and ones proportional to the "temperature"; 
@@ -83,3 +85,5 @@ def anneal(text, segs, iterations, cooling_rate):
         print(evaluate(text, segs), segment(text, segs))
     print()
     return segs
+
+
