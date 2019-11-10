@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3
 import os, sys, random, nltk, stanfordnlp, nltk.data, nltk.text
 from random import randint
+from nltk.stem.wordnet import WordNetLemmatizer
 
 
 # Natural Language Toolkit: code_stemmer_indexing. 
@@ -9,10 +10,11 @@ from random import randint
 
 '''Indexing a Text Using a Stemmer'''
 class IndexedText(object):
-
+    
     def __init__(self, stemmer, text):
         self._text = text
         self._stemmer = stemmer 
+        self._lem = WordNetLemmatizer()
         self._index = nltk.Index((self._stem(word), i)
                                  for (i, word) in enumerate(text))
 
@@ -30,9 +32,20 @@ class IndexedText(object):
     def _stem(self, word):
         return self._stemmer.stem(word).lower()
 
+    def _lemmatize(self, word):
+
+        # Lemmatization with StanfordNLP
+        # word = nltk.word_tokenize(word)
+        # words = nlp(word)
+        # words.sentences[0].print_dependencies()
+        # print(*[f'word: {word.text+" "}\tlemma: {word.lemma}' for sent in words.sentences for word in sent.words], sep='\n')
+
+
+        return self._lem.lemmatize(word).lower()
+
 
 # TOKENIZE TEXT, LEAVING WORDS WITH SYMBOLS (HYPHENS, APOSTROPHES, ETC) AS THE SAME TOKEN
-def tokenize(self, text):
+def tokenize(text):
     pattern = r'''(?x) (?:[A-Z]\.)+ | \w+(?:-\w+)*| \$?\d+(?:\.\d+)?%?| \.\.\.| [][.,;"'?():-_`]'''
     return nltk.regexp_tokenize(text, pattern)
 
@@ -86,4 +99,10 @@ def anneal(text, segs, iterations, cooling_rate):
     print()
     return segs
 
+
+# text = "doyouseethekittyseethedoggydoyoulikethekittylikethedoggy"
+# seg1 = "0000000000000001000000000010000000000000000100000000000"
+# seg2 = "0100100100100001001001000010100100010010000100010010000"
+# seg3 = "0000100100000011001000000110000100010000001100010000001"
+# anneal(text, seg1, 5000, 1.2)
 
