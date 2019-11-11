@@ -6,9 +6,9 @@ import code_stemmer_indexing as stemmer
 from nltk.tokenize import sent_tokenize, PunktSentenceTokenizer
 from nltk.corpus import webtext as web
 from nltk.tag import StanfordPOSTagger, StanfordNERTagger
-from pickle import load, dump
+# from pickle import load, dump
 
-
+monty = nltk.sent_tokenize(web.raw('grail.txt'))
 # nlp = stanfordnlp.Pipeline(processors='tokenize,mwt,pos')
 # tagList = []
 # for i in range(len(monty)):
@@ -19,23 +19,18 @@ from pickle import load, dump
 
 # [print(tagList[i], end = '\n') for i in range(len(tagList))]
 
-
 jar = 'stanford-postagger-2018-10-16/stanford-postagger.jar'
 model = 'stanford-postagger-2018-10-16/models/english-left3words-distsim.tagger'
 
 spt = StanfordPOSTagger(model, jar, encoding='utf8')
+nrt = StanfordNERTagger(model, jar, encoding='utf8')
 
-# spt = StanfordPOSTagger('english-bidirectional-distsim.tagger')
-# nrt = StanfordNERTagger('english.all.3class.distsim.crf.ser.gz')
-
-monty = nltk.sent_tokenize(web.raw('grail.txt'))
 
 
 for i in range(len(monty)):
     text = nltk.word_tokenize(monty[i])
     monty[i] = nltk.pos_tag(text, tagset="universal")
     # print(line)
-
 
 trainingSize = int(len(monty) * 0.7)
 trainingSents = monty[:trainingSize]
@@ -52,10 +47,10 @@ def evaluateTags(trainingList, testList):
     # dump(t2, output, -1)
     # output.close()
 
-    return t2.evaluate(testList)
+    return t3.evaluate(testList)
 
 print(evaluateTags(trainingSents, testSents))
-print(testSents)
+# print(testSents)
 
 
 
