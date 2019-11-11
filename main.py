@@ -1,33 +1,40 @@
 import nltk
 from nltk.text import Text
-import code_stemmer_indexing as stemmer
+import stemming as stemmer
+import tagging as tag
 
-print("Hello, I'm a ChatBot. Ask me anything")
+
 def converse(userInput):
     conversation = True
     while conversation is True:
-        words = nltk.word_tokenize(userInput)
-        for i in range(len(words)):
-            words[i] = str.lower(words[i])
-        if words.__contains__("hello") or words.__contains__("hi"):
-            print("Hello")
-        elif words.__contains__("sad"):
-            print("That's too bad")
-        elif words.__contains__("where"):
-            print("Up North")
-        elif words.__contains__("?"):
-            print("Ask me again some other time")
-        elif words.__contains__("bye") or words.__contains__("goodbye"):
-            print("I have to leave now")
-            conversation = False
-        else:
-            print("I'm afraid I can't respond to that")
+        userInput = nltk.sent_tokenize(userInput)
+        userTags = tag.assignTags(userInput)
+        print(userInput)
+        conversation = False
+
+        # for i in range(len(words)):
+        #     words[i] = str.lower(words[i])
+        # if words.__contains__("hello") or words.__contains__("hi"):
+        #     print("Hello")
+        # elif words.__contains__("sad"):
+        #     print("That's too bad")
+        # elif words.__contains__("where"):
+        #     print("Up North")
+        # elif words.__contains__("?"):
+        #     print("Ask me again some other time")
+        # elif words.__contains__("bye") or words.__contains__("goodbye"):
+        #     print("I have to leave now")
+        #     conversation = False
+        # else:
+        #     print("I'm afraid I can't respond to that")
 
 # def getTokens(userInput):
 #     words = stemmer.tokenize(userInput)
 #     return words
 
-# converse(user)
+print("Hello, I'm a ChatBot. Ask me anything")
+user = input("")
+converse(user)
 
 
 

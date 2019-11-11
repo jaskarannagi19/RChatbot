@@ -2,7 +2,7 @@
 
 import nltk, stanfordnlp
 from nltk.text import Text
-import code_stemmer_indexing as stemmer
+import stemming as stemmer
 from nltk.tokenize import sent_tokenize, PunktSentenceTokenizer
 from nltk.corpus import webtext as web
 from nltk.tag import StanfordPOSTagger, StanfordNERTagger
@@ -26,17 +26,13 @@ spt = StanfordPOSTagger(model, jar, encoding='utf8')
 nrt = StanfordNERTagger(model, jar, encoding='utf8')
 
 
+def assignTags(items):
+    for i in range(len(items)):
+        text = nltk.word_tokenize(items[i])
+        items[i] = nltk.pos_tag(text, tagset="universal")
+        # print(line)
 
-for i in range(len(monty)):
-    text = nltk.word_tokenize(monty[i])
-    monty[i] = nltk.pos_tag(text, tagset="universal")
-    # print(line)
-
-trainingSize = int(len(monty) * 0.7)
-trainingSents = monty[:trainingSize]
-testSents = monty[trainingSize:]
-
-def evaluateTags(trainingList, testList):	
+def evaluateTags(testList, trainingList):	
     t0 = nltk.DefaultTagger("NN")
     t1 = nltk.UnigramTagger(trainingList, backoff=t0)
     t2 = nltk.BigramTagger(trainingList, backoff=t1)
@@ -46,11 +42,29 @@ def evaluateTags(trainingList, testList):
     # output = open('t2.pkl', 'wb')
     # dump(t2, output, -1)
     # output.close()
+    
+    if t3.evaluate(testList) > 0.7:
+        return testList
+    else:
+        return None
 
-    return t3.evaluate(testList)
+def printTags(items):
+    for i in range(len(items)):
+        print(items[i], end="")
 
-print(evaluateTags(trainingSents, testSents))
+assignTags(monty)
+
+trainingSize = int(len(monty) * 0.7)
+trainingSents = monty[:trainingSize]
+testSents = monty[trainingSize:]
+
+evaluateTags(testSents, trainingSents)
+
+
+# print(evaluateTags(trainingSents, testSents)) # = 0.8096951735817104
 # print(testSents)
+# print(evaluateTags(nltk.word_tokenize("What is the airspeed of an unladen swallow?")))
+
 
 
 
