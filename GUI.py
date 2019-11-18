@@ -31,9 +31,10 @@ class Window(Frame):
     def introText(self):
         num = random.randrange(0,3)
         randcolor = random.randrange(0, 7)
+
         sentences = ("Why not try saying hello?", "Ask me a question!", "Don't be nervous, say something!")
         text = Label(self, text=(sentences[num]))
-        text.config(fg = str(colours[randcolor]))
+        text.config(fg = str(colours[randcolor]),bg='white')
         text.pack()
 
     def client_exit(self):
@@ -54,7 +55,7 @@ def cb(event):
       else:
         botText = huh
       time.sleep(2)
-      output.config(text=botText)
+      output.config(text=botText, bg='blue')
 
 userInput = tkinter.Entry(root)
 userInput.place(x=300, y=550, anchor='center')
