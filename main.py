@@ -8,7 +8,7 @@ def converse(userInput):
     conversation = True
     while conversation is True:
         userInput = nltk.sent_tokenize(userInput)
-        userTags = tag.assignTags(userInput)
+        tag.assignTags(userInput)
         print(userInput)
         conversation = False
 
