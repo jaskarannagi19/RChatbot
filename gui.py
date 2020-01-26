@@ -7,7 +7,7 @@ import time
 import tkinter
 from tkinter import *
 import random
-
+from PIL import Image, ImageTk
 LARGE_FONT = ("Verdana", 18)
 
 
@@ -78,21 +78,6 @@ def welcome_to_settings():
 
 root = Tk ()
 
-
-#----------------------------------------------------------------------------------------------------
-
-"""  images used in window  """
-
-back = PhotoImage(file = 'icon/arrow_behind.PNG')
-
-front = PhotoImage(file = 'icon/arrow_ahead.PNG')
-
-exitt = PhotoImage(file = 'icon/exit.PNG')
-
-screen_1 = PhotoImage(file = 'icon/image_5.PNG')
-
-submit_img = PhotoImage(file = 'icon/image_8.PNG')
-
 #---------------------------------------------------------------------------------------------------------------------
 
 
@@ -114,11 +99,16 @@ welcome_chatbot = Label(frame_welcome, text='I am Chatbot ! ', font="Helvetica 1
 welcome_chatbot.place(x=200, y=270)
 
 # Places the image of the chatbot at the bottom half of the screen
-pic_1 = Label(frame_welcome, image=screen_1)
-pic_1.place(x=-2, y=357)
+screen_1 = Image.open("icon/image_5.png")
+screen1Img = ImageTk.PhotoImage(screen_1)
+imgScreen1 = Label(frame_welcome, image=screen1Img)
+imgScreen1.image = screen1Img
+imgScreen1.place(x=-2, y=357)
 
 # The button which will take the user to the cha screen
-button_front = Button(frame_welcome, image=front, relief="flat", bg="white", fg="#000000", bd="3px solid black",command=welcome_to_info).place(x=470, y=10)
+front = Image.open("icon/arrow_ahead.PNG")
+frontImg = ImageTk.PhotoImage(front)
+button_front = Button(frame_welcome, image=frontImg, relief="flat", bg="white", fg="#000000", bd="3px solid black",command=welcome_to_info).place(x=470, y=10)
 
 # __________________________________________________________________
 
@@ -127,7 +117,10 @@ frame_settings = Frame(root, bg="#3A39FE", height='670', width='550')
 frame_settings.pack_propagate(0)
 
 # Creates a button at the top left of the settings page which takes the user back to the main home screen
-button_back = Button(frame_settings, image=back, relief="flat", bg=c3, command=welcome_to_chat).place(x=10, y=10)
+# back = PhotoImage(file = 'icon/arrow_behind.PNG')
+back = Image.open("icon/arrow_behind.PNG")
+backImg = ImageTk.PhotoImage(back)
+button_back = Button(frame_settings, image=backImg, relief="flat", bg=c3, command=welcome_to_chat).place(x=10, y=10)
 
 # =====================================================================
 
@@ -270,7 +263,10 @@ bottom_frame = Frame(frame_chat, bg="#3A39FE", height='100', width='550')
 bottom_frame.pack_propagate(0)
 bottom_frame.pack(side=BOTTOM)
 
-button = Button(bottom_frame, image=submit_img, relief="flat", font='Vardana 10 bold', bg="#2221DE", command=submit)
+
+submit = Image.open("icon/image_8.PNG")
+submitImg = ImageTk.PhotoImage(submit)
+button = Button(bottom_frame, image=submitImg, relief="flat", font='Vardana 10 bold', bg="#2221DE", command=submit)
 button.place(x=410, y=27)
 
 entry = Text(bottom_frame, bg="white", fg="#000000", height='5', width='45', font='Verdana 10')
@@ -286,8 +282,11 @@ label_space = Label(frame_chats, bg="#000000").pack()
 
 button_write = Button(bottom_frame, text='write', bg=c3, fg=c2, font='Vardana 8', command=send_mail)
 
-button_back = Button(frame_chat, image=back, relief="flat", bg=c3, command=welcome_to_chat).place(x=10, y=10)
-button_front = Button(frame_chat, image=exitt, relief="flat", bg=c3, command=root.destroy).place(x=440, y=10)
+button_back = Button(frame_chat, image=backImg, relief="flat", bg=c3, command=welcome_to_chat).place(x=10, y=10)
+
+exit = Image.open("icon/exit.PNG")
+exitImage = ImageTk.PhotoImage(exit)
+button_front = Button(frame_chat, image=exitImage, relief="flat", bg=c3, command=root.destroy).place(x=440, y=10)
 
 # -----------------------------------------------------------------------------------------------------------
 
