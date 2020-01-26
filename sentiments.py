@@ -4,7 +4,7 @@ from nltk.corpus import webtext as web
 
 
 monty = nltk.sent_tokenize(web.raw('grail.txt'))
-sentenceTypes = [1, 2, 3, 4] # 1- Simple/Declarative, 2 - Imperative, 3 - Interrogative, 4 - Exclamatory
+sentenceTypes = [1, 2, 3, 4] # 1- Simple/Declarative, 2 - Imperative, 3 - Interrogative, 4 - Exclamatory 5 - Sound Effects, 6 - Descriptions, 7 - Non-English
 sentimentTags = [1, 2, 3, 4, 5, 6] # 1 - Negative, 2 - Somewhat Negative, 3 - Sarcastic, 4 - Neutral, 5 - Somewhat positive, 6 - Positive
 # THINK ABOUT SEPARATING QUESTIONS FROM STATEMENTS
 
@@ -21,5 +21,3 @@ with open('montyPython.csv', 'w', newline='') as file:
     for i in range(len(trainingSents)):
         if not trainingSents[i].startswith("SCENE"):
             writer.writerow([i, i, trainingSents[i]])
-
-

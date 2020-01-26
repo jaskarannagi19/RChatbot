@@ -7,6 +7,7 @@ import time
 import tkinter
 from tkinter import *
 import random
+import main as main
 
 LARGE_FONT = ("Verdana", 18)
 
@@ -38,12 +39,11 @@ c8 = '#83e7f2'
 #-------------------------------------------------------------------------------------------
 
 
-colours = ['Red','Blue','Green','Black',
-           'Orange','Purple','Brown']
+colours = ['Red','Blue','Green','Black', 'Orange','Purple','Brown']
 greetings = ['hola', 'hello', 'hi', 'Hi', 'hey!', 'hey']
 question = ['how are you?', 'how are you doing?']
 responses = ['Okay', "I'm fine"]
-huh = "I did not understand what you said"
+
 
 # ------------------------------------------------------------------------------------------------------------------
 
@@ -121,7 +121,7 @@ def clock():
     label_time.after(1000, clock)
 
 
-button_time = Button(frame_welcome, text='Time', height=1, font='Vardana 10 bold', width=8, bg="white", fg="#000000", command=clock)
+button_time = Button(frame_welcome, text='Time', height=1, font='Verdana 10 bold', width=8, bg="white", fg="#000000", command=clock)
 button_time.place(x=30, y=63)
 
 # _____________________________________________________________________________
@@ -156,9 +156,10 @@ function for producing response of
     """
     button_write.place_forget()
     global chat_raw
-    chat_raw = entry.get('1.0', 'end-1c')
+    # chat_raw = entry.get('1.0', 'end-1c')
     entry.delete('1.0', END)
-    chat = chat_raw.lower()
+    # chat = chat_raw.lower()
+    chat = main.converse
 
     global label_request
     label_request = Label(frame_chats, text=chat_raw, bg=c4, fg=c7, justify=LEFT, wraplength=300,
@@ -172,12 +173,11 @@ function for producing response of
     if chat in greetings:
         answer = random.choice(greetings)
 
-
     elif chat in question:
         answer = random.choice(responses)
 
     else:
-        answer = huh
+        answer = main.welcomeMessage
         button_write.place(x=430, y=3)
 
     get_response()

@@ -2,9 +2,12 @@ import nltk
 from nltk.text import Text
 import stemming as stemmer
 import tagging as tag
+import GUI as homepage
 
 
-def converse(userInput):
+def converse():
+    print("Hello, I'm a ChatBot. Ask me anything")
+    userInput = input("")
     conversation = True
     while conversation is True:
         userInput = nltk.sent_tokenize(userInput)
@@ -32,9 +35,7 @@ def converse(userInput):
 #     words = stemmer.tokenize(userInput)
 #     return words
 
-print("Hello, I'm a ChatBot. Ask me anything")
-user = input("")
-converse(user)
+converse()
 
 
 
