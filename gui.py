@@ -8,6 +8,7 @@ import tkinter
 from tkinter import *
 import random
 from PIL import Image, ImageTk
+import main as main
 LARGE_FONT = ("Verdana", 18)
 
 
@@ -169,7 +170,7 @@ button_settings.place(x=10, y=10)
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-def submit():
+def submit(event):
     """
 function for producing response of
         request of user
@@ -193,19 +194,20 @@ function for producing response of
     label_request.pack(anchor='w')
 
     global answer
+    answer = main.converse(chat)
 
-    # If the variable chat appears in the greetings array, then the bot will reply with something in the greetings array
-    if chat in greetings:
-        answer = random.choice(greetings)
+    # # If the variable chat appears in the greetings array, then the bot will reply with something in the greetings array
+    # if chat in greetings:
+    #     answer = main.converse(chat)
 
-    # If the variable chat appears in the question array, then the bot will reply with something in the responses array
-    elif chat in question:
-        answer = random.choice(responses)
+    # # If the variable chat appears in the question array, then the bot will reply with something in the responses array
+    # elif chat in question:
+    #     answer = random.choice(responses)
 
-    # If the variable chat doesnt appear in either array, then the bot will reply with a standard saying (defined by 'huh')
-    else:
-        answer = huh
-        button_write.place(x=430, y=3)
+    # # If the variable chat doesnt appear in either array, then the bot will reply with a standard saying (defined by 'huh')
+    # else:
+    #     answer = huh
+    button_write.place(x=430, y=3)
 
     get_response()
     pass
@@ -218,15 +220,15 @@ def get_response() :
     global label_response
     label_response = Label(frame_chats ,text= answer ,bg="white", fg="#000000", justify = LEFT , wraplength = 300, font = 'Verdana 10 bold')
     label_response.pack(anchor = 'e')
+
     if answer ==  'Bye':
         root.destroy()
 
 # This is where the bot will instantly type something to get the conversation started, it will choose one of the 3 predetermined sentences to output
 def introText():
     num = random.randrange(0, 3)
-    sentences = ("Why not try saying hello?", "Ask me a question!", "Don't be nervous, say something!")
     global answer
-    answer=sentences[num]
+    answer="Hello, I'm a ChatBot. Ask me anything"
     get_response()
 
 # Doesnt do anything yet
@@ -264,9 +266,10 @@ bottom_frame.pack_propagate(0)
 bottom_frame.pack(side=BOTTOM)
 
 
-submit = Image.open("icon/image_8.PNG")
-submitImg = ImageTk.PhotoImage(submit)
-button = Button(bottom_frame, image=submitImg, relief="flat", font='Vardana 10 bold', bg="#2221DE", command=submit)
+submitimage = Image.open("icon/image_8.PNG")
+submitImg = ImageTk.PhotoImage(submitimage)
+button = Button(bottom_frame, image=submitImg, relief="flat", font='Vardana 10 bold', bg="#2221DE")
+button.bind('<Button-1>', submit)
 button.place(x=410, y=27)
 
 entry = Text(bottom_frame, bg="white", fg="#000000", height='5', width='45', font='Verdana 10')

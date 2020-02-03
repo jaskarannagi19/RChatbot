@@ -27,10 +27,13 @@ nrt = StanfordNERTagger(model, jar, encoding='utf8')
 
 
 def assignTags(items):
+    response = ""
     for i in range(len(items)):
         text = nltk.word_tokenize(items[i])
         items[i] = nltk.pos_tag(text, tagset="universal")
+        response + str(items[i])
         # print(line)
+    return response
 
 def evaluateTags(testList, trainingList):	
     t0 = nltk.DefaultTagger("NN")
