@@ -4,9 +4,15 @@ import nltk, csv
 with open("MontyPython.txt") as file:
     lines = file.readlines()
 lines = [line.strip() for line in lines] 
+
+tempLines = []
+for i in range(len(lines)):
+    if not lines[i].startswith('['):
+        tempLines.append(lines[i])
+lines = tempLines
+
 lines = [nltk.sent_tokenize(lines[i]) for i in range(len(lines))]
 lines = [nltk.word_tokenize(str(lines[i])) for i in range(len(lines))]
-
 def assignTags(items):
     for i in range(len(items)):
         items[i] = nltk.pos_tag(items[i])
@@ -22,18 +28,11 @@ def evaluateTags(testList, trainingList):
     else:
         return None
 
-def printTags(items):
-    for i in range(len(items)):
-        print(items[i], end="")
-
-# assignTags(lines)
-# [print(lines[i], end='\n') for i in range(len(lines))]
-
+assignTags(lines)
 trainingSize = int(len(lines) * 0.7)
 trainingSents = lines[:trainingSize]
 testSents = lines[trainingSize:]
-
-# evaluateTags(testSents, trainingSents)
+evaluateTags(testSents, trainingSents)
 
 """SENTIMENT ANALYSIS"""
 
@@ -43,12 +42,12 @@ sentimentTags = [1, 2, 3, 4, 5, 6] # 1 - Negative, 2 - Somewhat Negative, 3 - Sa
 def writeToFile(listToWrite, fileName):
     with open(fileName, 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(["PhraseID", "SentenceID", "Sentence"])
+        writer.writerow(["SentenceID", "Sentence"])
         for i in range(len(listToWrite)):
-            writer.writerow([i, i, listToWrite[i]])
+            writer.writerow([i+1, listToWrite[i]])
 
-# writeToFile(trainingSents, 'trainingList.csv')
-# writeToFile(testSents, 'testList.csv')
+writeToFile(tempLines[:trainingSize], 'trainingList.csv')
+writeToFile(tempLines[trainingSize:], 'testList.csv')
 
 
 
@@ -84,7 +83,4 @@ for tree in rd_parser.parse(sent):
 
 
 # NLTK: Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
-''' STANFORD NLP: Peng Qi, Timothy Dozat, Yuhao Zhang and Christopher D. Manning. 2018. 
-Universal Dependency Parsing from Scratch In Proceedings of the CoNLL 2018 Shared Task: 
-Multilingual Parsing from Raw Text to Universal Dependencies, pp. 160-170. [pdf] [bib] '''
 
