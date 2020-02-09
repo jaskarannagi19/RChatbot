@@ -1,23 +1,21 @@
 import nltk
 from nltk.text import Text
-import stemming as stemmer
+# import gui 
 import tagging as tag
 
 
-def converse(userInput):
+def converse(inputString):
+
     conversation = True
     while conversation is True:
-        userInput = nltk.sent_tokenize(userInput)
-        output = tag.assignTags(userInput)
-        print(userInput)
+        inputList = inputString.split(" ")
+
+        output = tag.assignTags(inputList)
         conversation = False
-
-
     return output
 
-
-userInput = input("")
-converse(userInput)
+# userInput = input("")
+# converse(userInput)
 
 
 

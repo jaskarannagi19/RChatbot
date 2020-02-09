@@ -1,6 +1,35 @@
 #!/usr/local/bin/python3
 import nltk, csv
 
+# TOKENIZE TEXT, LEAVING WORDS WITH SYMBOLS (HYPHENS, APOSTROPHES, ETC) AS THE SAME TOKEN
+def tokenize(text):
+    pattern = r'''(?x) (?:[A-Z]\.)+ | \w+(?:-\w+)*| \$?\d+(?:\.\d+)?%?| \.\.\.| [][.,;"'?():-_`]'''
+    return nltk.regexp_tokenize(text, pattern)
+
+def assignTags(items):
+    
+    items = [tokenize(str(items[i])) for i in range(len(items))]
+    taggedItems = []
+    for i in range(len(items)):
+        item = nltk.pos_tag(items[i])
+        taggedItems.append(item)
+
+    return evaluateTags(taggedItems)
+
+def evaluateTags(trainingList, testList=None):	
+    t0 = nltk.DefaultTagger("NN")
+    t1 = nltk.UnigramTagger(trainingList, backoff=t0)
+    t2 = nltk.BigramTagger(trainingList, backoff=t1)
+    t3 = nltk.TrigramTagger(trainingList, backoff=t2)
+
+    if testList is not None:
+        if t3.evaluate(testList) > 0.7:
+                return testList
+        else:
+            return None
+    else:
+        return trainingList
+    
 with open("MontyPython.txt") as file:
     lines = file.readlines()
 lines = [line.strip() for line in lines] 
@@ -12,27 +41,12 @@ for i in range(len(lines)):
 lines = tempLines
 
 lines = [nltk.sent_tokenize(lines[i]) for i in range(len(lines))]
-lines = [nltk.word_tokenize(str(lines[i])) for i in range(len(lines))]
-def assignTags(items):
-    for i in range(len(items)):
-        items[i] = nltk.pos_tag(items[i])
-
-def evaluateTags(testList, trainingList):	
-    t0 = nltk.DefaultTagger("NN")
-    t1 = nltk.UnigramTagger(trainingList, backoff=t0)
-    t2 = nltk.BigramTagger(trainingList, backoff=t1)
-    t3 = nltk.TrigramTagger(trainingList, backoff=t2)
-
-    if t3.evaluate(testList) > 0.7:
-        return testList
-    else:
-        return None
-
-assignTags(lines)
-trainingSize = int(len(lines) * 0.7)
-trainingSents = lines[:trainingSize]
-testSents = lines[trainingSize:]
-evaluateTags(testSents, trainingSents)
+# taggedLines = assignTags(lines)
+# [print(taggedLines[i], end="\n") for i in range(len(taggedLines))]
+# trainingSize = int(len(lines) * 0.7)
+# trainingSents = lines[:trainingSize]
+# testSents = lines[trainingSize:]
+# evaluateTags(testSents, trainingSents)
 
 """SENTIMENT ANALYSIS"""
 
@@ -46,8 +60,8 @@ def writeToFile(listToWrite, fileName):
         for i in range(len(listToWrite)):
             writer.writerow([i+1, listToWrite[i]])
 
-writeToFile(tempLines[:trainingSize], 'trainingList.csv')
-writeToFile(tempLines[trainingSize:], 'testList.csv')
+# writeToFile(tempLines[:trainingSize], 'trainingList.csv')
+# writeToFile(tempLines[trainingSize:], 'testList.csv')
 
 
 
@@ -68,11 +82,11 @@ sentence = [("the", "DT"), ("little", "JJ"), ("yellow", "JJ"), ("dog", "NN"), ("
 # #   (NP the/DT cat/NN))
 # result.draw() 
 
-grammar1 = nltk.data.load('file:grammars.cfg')
-sent = "Mary saw Bob".split()
-rd_parser = nltk.RecursiveDescentParser(grammar1)
-for tree in rd_parser.parse(sent):
-    print(tree)
+# grammar1 = nltk.data.load('file:grammars.cfg')
+# sent = "Mary saw Bob".split()
+# rd_parser = nltk.RecursiveDescentParser(grammar1)
+# for tree in rd_parser.parse(sent):
+#     print(tree)
 
 
 

@@ -8,7 +8,7 @@ import tkinter
 from tkinter import *
 import random
 from PIL import Image, ImageTk
-import main as main
+import conversation 
 LARGE_FONT = ("Verdana", 18)
 
 
@@ -41,10 +41,10 @@ c8 = '#83e7f2'
 
 colours = ['Red','Blue','Green','Black',
            'Orange','Purple','Brown']
-greetings = ['hola', 'hello', 'hi', 'Hi', 'hey!', 'hey']
-question = ['how are you?', 'how are you doing?']
-responses = ['Okay', "I'm fine"]
-huh = "I did not understand what you said"
+# greetings = ['hola', 'hello', 'hi', 'Hi', 'hey!', 'hey']
+# question = ['how are you?', 'how are you doing?']
+# responses = ['Okay', "I'm fine"]
+# huh = "I did not understand what you said"
 
 # ------------------------------------------------------------------------------------------------------------------
 
@@ -194,19 +194,7 @@ function for producing response of
     label_request.pack(anchor='w')
 
     global answer
-    answer = main.converse(chat)
-
-    # # If the variable chat appears in the greetings array, then the bot will reply with something in the greetings array
-    # if chat in greetings:
-    #     answer = main.converse(chat)
-
-    # # If the variable chat appears in the question array, then the bot will reply with something in the responses array
-    # elif chat in question:
-    #     answer = random.choice(responses)
-
-    # # If the variable chat doesnt appear in either array, then the bot will reply with a standard saying (defined by 'huh')
-    # else:
-    #     answer = huh
+    answer = conversation.converse(chat)
     button_write.place(x=430, y=3)
 
     get_response()
