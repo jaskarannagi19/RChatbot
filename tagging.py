@@ -63,11 +63,25 @@ def writeToFile(listToWrite, fileName):
 # writeToFile(tempLines[:trainingSize], 'trainingList.csv')
 # writeToFile(tempLines[trainingSize:], 'testList.csv')
 
+""" TEXT CLASSIFICATION """
+# NLTK BOOK: CHAPTER 6 
+# STEPS
+# 1. Decide what features will be extracted
+# 2. Build a function that extracts these features from the material
+# 3. Divide what is returned by the feature extractor into training and testing
+# 4. Examine and evaluate the results of the feature extractor to determine which features are the most effective 
+#       for building a classification model
+# Circumvent overfitting by dividing the training data further into two - use 70% to build
+# use the other 30% to perform error analysis.
+#       We can then examine individual error cases where the model predicted the wrong label, 
+#       and try to determine what additional pieces of information would allow it to make the right decision 
+#       (or which existing pieces of information are tricking it into making the wrong decision)
+
 
 
 
 """WORKING WITH GRAMMARS"""
-sentence = [("the", "DT"), ("little", "JJ"), ("yellow", "JJ"), ("dog", "NN"), ("barked", "VBD"), ("at", "IN"),  ("the", "DT"), ("cat", "NN")]
+# sentence = [("the", "DT"), ("little", "JJ"), ("yellow", "JJ"), ("dog", "NN"), ("barked", "VBD"), ("at", "IN"),  ("the", "DT"), ("cat", "NN")]
 
 # def chunkSentence(inputSentence):
 #     grammar = "NP: {<DT>?<JJ>*<NN>}" 
@@ -82,11 +96,12 @@ sentence = [("the", "DT"), ("little", "JJ"), ("yellow", "JJ"), ("dog", "NN"), ("
 # #   (NP the/DT cat/NN))
 # result.draw() 
 
-# grammar1 = nltk.data.load('file:grammars.cfg')
-# sent = "Mary saw Bob".split()
-# rd_parser = nltk.RecursiveDescentParser(grammar1)
-# for tree in rd_parser.parse(sent):
-#     print(tree)
+grammar1 = nltk.data.load('file:grammars.cfg')
+sent = "Mary saw Bob".split()
+rd_parser = nltk.RecursiveDescentParser(grammar1)
+for tree in rd_parser.parse(sent):
+    print(tree)
+
 
 
 
