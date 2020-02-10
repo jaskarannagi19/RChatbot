@@ -230,6 +230,12 @@ def refresh_screen () :
 
 # Email function
 def send_mail():
+
+    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s.starttls()
+    s.login("chatbot.kentcomputing@gmail.com", "Groupproject2020")
+    s.sendmail("chatbot.kentcomputing@gmail.com", "chatbot.kentcomputing@gmail.com", emailArray)
+    s.quit()
     pass
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
