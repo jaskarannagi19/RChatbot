@@ -7,6 +7,7 @@ import time
 import tkinter
 from tkinter import *
 import random
+import datetime
 from PIL import Image, ImageTk
 import conversation 
 LARGE_FONT = ("Verdana", 18)
@@ -77,7 +78,7 @@ def welcome_to_settings():
 # --------------------------------------------------------------------------------------------
 
 
-root = Tk ()
+root = Tk()
 
 #---------------------------------------------------------------------------------------------------------------------
 
@@ -107,7 +108,7 @@ imgScreen1.image = screen1Img
 imgScreen1.place(x=-2, y=357)
 
 # The button which will take the user to the cha screen
-front = Image.open("icon/arrow_ahead.PNG")
+front = Image.open("icon/arrow_ahead.png")
 frontImg = ImageTk.PhotoImage(front)
 button_front = Button(frame_welcome, image=frontImg, relief="flat", bg="white", fg="#000000", bd="3px solid black",command=welcome_to_info).place(x=470, y=10)
 
@@ -119,7 +120,7 @@ frame_settings.pack_propagate(0)
 
 # Creates a button at the top left of the settings page which takes the user back to the main home screen
 # back = PhotoImage(file = 'icon/arrow_behind.PNG')
-back = Image.open("icon/arrow_behind.PNG")
+back = Image.open("icon/arrow_behind.png")
 backImg = ImageTk.PhotoImage(back)
 button_back = Button(frame_settings, image=backImg, relief="flat", bg=c3, command=welcome_to_chat).place(x=10, y=10)
 
@@ -189,15 +190,22 @@ function for producing response of
 
     # This creates the label for where the user output is going to be stored, it is anchored on the west (left side) and is highlighted so you can clearly see it
     global label_request
-    label_request = Label(frame_chats, text=chat_raw, bg=c4, fg=c7, justify=LEFT, wraplength=300,
+    label_request = Label(scrollable_frame, text=chat_raw, bg=c4, fg=c7, justify=LEFT, wraplength=300,
                           font='Verdana 10 bold')
+    ts = time.time()
+    _time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    time_stamp = Label(scrollable_frame, text=_time, bg="white", fg="#000000", justify=LEFT, wraplength=300,
+                       font='Verdana 10 bold')
     label_request.pack(anchor='w')
+    time_stamp.pack(anchor='w')
+
 
     global answer
     answer = conversation.converse(chat)
     button_write.place(x=430, y=3)
 
     get_response()
+    canvas.yview_moveto(1)
     pass
 
 
@@ -206,8 +214,14 @@ def get_response() :
 
     # This code shows the bot reply on the east (right side) of the screen and also, if the user input is "bye" then the program will end.
     global label_response
-    label_response = Label(frame_chats ,text= answer ,bg="white", fg="#000000", justify = LEFT , wraplength = 300, font = 'Verdana 10 bold')
+
+    label_response = Label(scrollable_frame ,text= answer ,bg="white", fg="#000000", justify =LEFT , wraplength = 300, font = 'Verdana 10 bold')
+    ts = time.time()
+    _time=datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    time_stamp = Label(scrollable_frame,text= _time ,bg="white", fg="#000000", justify = LEFT, wraplength = 300, font = 'Verdana 10 bold')
     label_response.pack(anchor = 'e')
+    time_stamp.pack(anchor='e')
+
 
     if answer ==  'Bye':
         root.destroy()
@@ -219,13 +233,14 @@ def introText():
     answer="Hello, I'm a ChatBot. Ask me anything"
     get_response()
 
+
 # Doesnt do anything yet
 def refresh_screen () :
     for widget in frame_chats.winfo_children():
         widget.destroy()
 
     button_write.place_forget()
-    label_space = Label (frame_chats , bg = c1 ,  text = '')
+    label_space = Label (scrollable_frame , bg = c1 ,  text = '')
     label_space.pack()
 
 # Email function
@@ -260,7 +275,7 @@ bottom_frame.pack_propagate(0)
 bottom_frame.pack(side=BOTTOM)
 
 
-submitimage = Image.open("icon/image_8.PNG")
+submitimage = Image.open("icon/image_8.png")
 submitImg = ImageTk.PhotoImage(submitimage)
 button = Button(bottom_frame, image=submitImg, relief="flat", font='Vardana 10 bold', bg="#2221DE")
 button.bind('<Button-1>', submit)
@@ -270,23 +285,38 @@ entry = Text(bottom_frame, bg="white", fg="#000000", height='5', width='45', fon
 entry.bind('<Return>', submit)
 entry.place(x=30, y=10)
 
-frame_chats = Frame(frame_chat, bg="#FFFFFF", height='450', width='500')
+
+
+#For scrollbar add canvas widget and place frame w
+
+frame_chats = Frame(frame_chat, bg="#FFFFFF", height='450', width='550')
+canvas = Canvas(frame_chats)
+scrollbar = Scrollbar(canvas,orient="vertical",command=canvas.yview)
+scrollable_frame = Frame(canvas)
+
+
+scrollable_frame.bind(
+    "<Configure>",
+    lambda e: canvas.configure(
+        scrollregion=canvas.bbox("all")
+    )
+)
+canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+canvas.configure(yscrollcommand=scrollbar.set)
+
 frame_chats.pack_propagate(0)
+
 frame_chats.pack()
+canvas.pack(side="left", fill="both", expand=True)
+scrollbar.pack(side="right", fill="y")
 
-label_space = Label(frame_chats, bg="#000000").pack()
-
-
-button_write = Button(bottom_frame, text='write', bg=c3, fg=c2, font='Vardana 8', command=send_mail)
-
+button_write = Button(bottom_frame, text='Email Chat', bg=c3, fg=c2, font='Vardana 8', command=send_mail)
 button_back = Button(frame_chat, image=backImg, relief="flat", bg=c3, command=welcome_to_chat).place(x=10, y=10)
 
-exit = Image.open("icon/exit.PNG")
+exit = Image.open("icon/exit.png")
 exitImage = ImageTk.PhotoImage(exit)
 button_front = Button(frame_chat, image=exitImage, relief="flat", bg=c3, command=root.destroy).place(x=440, y=10)
 
 # -----------------------------------------------------------------------------------------------------------
-
-
 root.title("Chatbot")
 root.mainloop ()
