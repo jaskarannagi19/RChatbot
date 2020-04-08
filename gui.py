@@ -1,22 +1,14 @@
 import tkinter as tk
-#from tkinter import *
-#import random
-#from datetime import datetime
-
 import time
 import tkinter
 from tkinter import *
 import random
 import datetime
 from PIL import Image, ImageTk
-import conversation 
+import conversation
+import smtplib
+import json
 LARGE_FONT = ("Verdana", 18)
-
-
-#------------------------------------------------------------------------------------------
-
-"""  colors  for   later   use"""
-
 c1 = '#263238'
 c2 = '#000000'
 c3 = '#FFFFFF'
@@ -28,53 +20,21 @@ c5 = '#577e75'
 c7 = '#1e282d'
 c8 = '#faa21f'
 
-# Alternative Chat Colours
-'''
-c4 = '#4790f9'
-c5 = '#00a3cf'
-
-c7 = '#85c0f6'
-c8 = '#83e7f2'
-'''
-
-#-------------------------------------------------------------------------------------------
-
-
-colours = ['Red','Blue','Green','Black',
-           'Orange','Purple','Brown']
-# greetings = ['hola', 'hello', 'hi', 'Hi', 'hey!', 'hey']
-# question = ['how are you?', 'how are you doing?']
-# responses = ['Okay', "I'm fine"]
-# huh = "I did not understand what you said"
-
 # ------------------------------------------------------------------------------------------------------------------
 
-"""
-
-moving from one page to another
-    by help of button
-
-"""
+""" Moving from one page to another by help of button """
 
 # method that will display the main welcome screen upon being called
 def welcome_to_info():
     frame_welcome.pack_forget()
-    frame_settings.pack_forget()
     frame_chat.pack()
     introText()
 
 # method that will display the main chat screen upon being called
 def welcome_to_chat():
     frame_chat.pack_forget()
-    frame_settings.pack_forget()
     frame_welcome.pack()
 
-# method that will display the settings screen upon being called
-def welcome_to_settings():
-    frame_welcome.pack_forget()
-    frame_settings.pack()
-
-# -----------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------------------
 
 
@@ -83,8 +43,8 @@ root = Tk()
 #---------------------------------------------------------------------------------------------------------------------
 
 
-"""     WELCOME FRAME    """
-"""    first frame containing time date and welcome messages """
+"""     WELCOME FRAME    
+        First frame containing time date and welcome messages """
 
 # Display the frame with a specified background colour and with set dimensions.  
 frame_welcome = Frame(root, bg="#3A39FE", height='670', width='550')
@@ -94,11 +54,11 @@ frame_welcome.pack()
 
 # The main welcome label you see when opening the chatbot 
 welcome = Label(frame_welcome, text='Welcome', font="Vardana 40 bold", bg="#3A39FE", fg="white")
-welcome.place(x=160, y=200)
+welcome.place(relx=0.5, rely=0.25, anchor=CENTER)
 
 # The secondary label that appears underneath the welcome label
-welcome_chatbot = Label(frame_welcome, text='I am Chatbot ! ', font="Helvetica 15 bold italic", bg=c1, fg=c6)
-welcome_chatbot.place(x=200, y=270)
+welcome_chatbot = Label(frame_welcome, text='My name is Monty and I am a chatbot! ', font="Helvetica 15 bold italic", bg=c1, fg=c6)
+welcome_chatbot.place(relx=0.5, rely=0.4, anchor=CENTER)
 
 # Places the image of the chatbot at the bottom half of the screen
 screen_1 = Image.open("icon/image_5.png")
@@ -107,101 +67,55 @@ imgScreen1 = Label(frame_welcome, image=screen1Img)
 imgScreen1.image = screen1Img
 imgScreen1.place(x=-2, y=357)
 
-# The button which will take the user to the cha screen
+# The button which will take the user to the chat screen
 front = Image.open("icon/arrow_ahead.png")
 frontImg = ImageTk.PhotoImage(front)
 button_front = Button(frame_welcome, image=frontImg, relief="flat", bg="white", fg="#000000", bd="3px solid black",command=welcome_to_info).place(x=470, y=10)
-
-# __________________________________________________________________
-
-# This is the frame for the settings page
-frame_settings = Frame(root, bg="#3A39FE", height='670', width='550')
-frame_settings.pack_propagate(0)
-
-# Creates a button at the top left of the settings page which takes the user back to the main home screen
-# back = PhotoImage(file = 'icon/arrow_behind.PNG')
 back = Image.open("icon/arrow_behind.png")
 backImg = ImageTk.PhotoImage(back)
-button_back = Button(frame_settings, image=backImg, relief="flat", bg=c3, command=welcome_to_chat).place(x=10, y=10)
-
-# =====================================================================
-
-"""  time option  """
-
-
-def clock():
-    current = time.strftime("%H:%M:%S")
-    label_time = Label(frame_welcome, bd=5, text=current, height=1, width=8, font='Ariel 11 bold', fg="#000000",
-                       relief='groove', bg=c3)
-    label_time.place(x=120, y=63)
-
-    label_time.after(1000, clock)
-
-
-button_time = Button(frame_welcome, text='Time', height=1, font='Vardana 10 bold', width=8, bg="white", fg="#000000", command=clock)
-button_time.place(x=30, y=63)
-
-# _____________________________________________________________________________
-
-"""    date option   """
-
-
-def date():
-    try:
-        date = time.strftime("%d %B , 20%y")
-        label_date = Label(frame_welcome, bd=5, relief='groove', text=date, bg=c3, fg="#000000", height=1,
-                           font='Ariel 11 bold')
-        label_date.place(x=400, y=63)
-
-        label_date.after(86400000, date)
-
-    except AttributeError:
-        print('')
-
-
-button_date = Button(frame_welcome, text='Date', height=1, font='Vardana 10 bold', width=8, bg="white", fg="#000000", command=date)
-button_date.place(x=310, y=63)
 
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-# Adds a button to the home page which allows the user to go to the settings page
-button_settings = Button(frame_welcome, text='Settings', height=1, font='Vardana 10 bold', width=8, bg="white", fg="#000000", command=welcome_to_settings)
-button_settings.place(x=10, y=10)
-
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+emailArray = []
+# Function to delete the user input after submit button is clicked
+def emptyUserInput():
+    entry.delete("1.0", END)
 
 def submit(event):
-    """
-function for producing response of
-        request of user
-
-    """
+    """ Function for producing response of
+        Request of user """
     button_write.place_forget()
     # Creates a global variable named chat_raw
     global chat_raw
-    # The inut box is then read from the first line character 0 (the very beginning), while the end-1c tells the reader to stop at the end of the input box,
+    # The input box is then read from the first line character 0 (the very beginning), while the end-1c tells the reader to stop at the end of the input box,
     # The -1c is because tkinter creates a new line at the end of each entry, which we dont want so we just delete 1 character from the end
     chat_raw = entry.get('1.0', 'end-1c')
-    # The following line deletes whatever was in the input box when the submit button was pressed
-    entry.delete('1.0', END)
-    # This saves the variable chat as the most recent input from the user
+    # The following line calls a function after 1/1000 of a second to delete the input. This was done to avoid a minor bug that kept happening
+    entry.after(1, emptyUserInput)
+    # This changes the user input to all lowercase
     chat = chat_raw.lower()
+    emailArray.append(chat)
 
     # This creates the label for where the user output is going to be stored, it is anchored on the west (left side) and is highlighted so you can clearly see it
     global label_request
-    label_request = Label(scrollable_frame, text=chat_raw, bg=c4, fg=c7, justify=LEFT, wraplength=300,
+    label_request = Label(scrollable_frame, text=chat_raw, bg="#00BFFF", fg=c7, justify=LEFT, wraplength=300,
                           font='Verdana 10 bold')
     ts = time.time()
     _time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-    time_stamp = Label(scrollable_frame, text=_time, bg="white", fg="#000000", justify=LEFT, wraplength=300,
+    time_stamp_bot = Label(scrollable_frame, text=_time, bg="white", fg="#000000", justify=LEFT, wraplength=300,
                        font='Verdana 10 bold')
-    label_request.pack(anchor='w')
-    time_stamp.pack(anchor='w')
-
+    time_stamp_user = Label(scrollable_frame, text=_time, bg="#00BFFF", fg="#000000", justify=LEFT, wraplength=300,
+                       font='Verdana 10 bold')
+    label_request.pack(anchor='e')
+    time_stamp_user.pack(anchor='e')
 
     global answer
-    answer = conversation.converse(chat)
+    if len(chat) != 0:
+        answer = conversation.converse(chat)
+        emailArray.append(answer)
+    else:
+        answer = "I can't respond if you don't say anything..."
+
     button_write.place(x=430, y=3)
 
     get_response()
@@ -212,25 +126,24 @@ function for producing response of
 
 def get_response() :
 
-    # This code shows the bot reply on the east (right side) of the screen and also, if the user input is "bye" then the program will end.
+    # This code shows the bot reply and also, if the user input is "bye" then the program will end.
     global label_response
 
     label_response = Label(scrollable_frame ,text= answer ,bg="white", fg="#000000", justify =LEFT , wraplength = 300, font = 'Verdana 10 bold')
     ts = time.time()
     _time=datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     time_stamp = Label(scrollable_frame,text= _time ,bg="white", fg="#000000", justify = LEFT, wraplength = 300, font = 'Verdana 10 bold')
-    label_response.pack(anchor = 'e')
-    time_stamp.pack(anchor='e')
+    label_response.pack(anchor = 'w')
+    time_stamp.pack(anchor='w')
 
 
     if answer ==  'Bye':
         root.destroy()
 
-# This is where the bot will instantly type something to get the conversation started, it will choose one of the 3 predetermined sentences to output
+# This is where the bot will instantly type something to get the conversation started
 def introText():
-    num = random.randrange(0, 3)
     global answer
-    answer="Hello, I'm a ChatBot. Ask me anything"
+    answer="Hello, I am Monty. Ask me anything"
     get_response()
 
 
@@ -246,10 +159,12 @@ def refresh_screen () :
 # Email function
 def send_mail():
 
+
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.starttls()
+    _emailArray = json.dumps(emailArray)
     s.login("chatbot.kentcomputing@gmail.com", "Groupproject2020")
-    s.sendmail("chatbot.kentcomputing@gmail.com", "chatbot.kentcomputing@gmail.com", emailArray)
+    s.sendmail("chatbot.kentcomputing@gmail.com", "chatbot.kentcomputing@gmail.com", _emailArray)
     s.quit()
     pass
 
@@ -290,10 +205,9 @@ entry.place(x=30, y=10)
 #For scrollbar add canvas widget and place frame w
 
 frame_chats = Frame(frame_chat, bg="#FFFFFF", height='450', width='550')
-canvas = Canvas(frame_chats)
+canvas = Canvas(frame_chats, width='550')
 scrollbar = Scrollbar(canvas,orient="vertical",command=canvas.yview)
 scrollable_frame = Frame(canvas)
-
 
 scrollable_frame.bind(
     "<Configure>",
@@ -301,21 +215,25 @@ scrollable_frame.bind(
         scrollregion=canvas.bbox("all")
     )
 )
-canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+canvas.create_window((0, 0), window=scrollable_frame, width='534', anchor="nw")
 canvas.configure(yscrollcommand=scrollbar.set)
 
 frame_chats.pack_propagate(0)
 
 frame_chats.pack()
-canvas.pack(side="left", fill="both", expand=True)
+canvas.pack(side=LEFT, fill=BOTH, expand=True)
 scrollbar.pack(side="right", fill="y")
 
 button_write = Button(bottom_frame, text='Email Chat', bg=c3, fg=c2, font='Vardana 8', command=send_mail)
 button_back = Button(frame_chat, image=backImg, relief="flat", bg=c3, command=welcome_to_chat).place(x=10, y=10)
 
-exit = Image.open("icon/exit.png")
+exit = Image.open("icon/icon_exit.png")
 exitImage = ImageTk.PhotoImage(exit)
-button_front = Button(frame_chat, image=exitImage, relief="flat", bg=c3, command=root.destroy).place(x=440, y=10)
+button_front = Button(frame_chat, image=exitImage, relief="flat", bg=c3, command=root.destroy).place(x=500, y=10)
+
+
+
+
 
 # -----------------------------------------------------------------------------------------------------------
 root.title("Chatbot")

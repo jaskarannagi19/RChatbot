@@ -1,5 +1,7 @@
 #!/usr/local/bin/python3
 import nltk, csv
+from nltk.stem import WordNetLemmatizer
+lem = WordNetLemmatizer()
 
 # TOKENIZE TEXT, LEAVING WORDS WITH SYMBOLS (HYPHENS, APOSTROPHES, ETC) AS THE SAME TOKEN
 def tokenize(text):
@@ -7,14 +9,20 @@ def tokenize(text):
     return nltk.regexp_tokenize(text, pattern)
 
 def assignTags(items):
-    
+    # items = [lem.lemmatize(str(items[i])) for i in range(len(items)) ]
+    # print(items)
+
     items = [tokenize(str(items[i])) for i in range(len(items))]
+    # for i in range(len(items)):
+    #     items[i] = lem.lemmatize(items[i], pos="v")
     taggedItems = []
     for i in range(len(items)):
+        # lem.lemmatize(wordList[i], pos="v")
         item = nltk.pos_tag(items[i])
         taggedItems.append(item)
 
-    return evaluateTags(taggedItems)
+    return taggedItems
+    # return evaluateTags(taggedItems)
 
 def evaluateTags(trainingList, testList=None):	
     t0 = nltk.DefaultTagger("NN")
@@ -49,9 +57,7 @@ lines = [nltk.sent_tokenize(lines[i]) for i in range(len(lines))]
 # evaluateTags(testSents, trainingSents)
 
 """SENTIMENT ANALYSIS"""
-
-sentenceTypes = [1, 2, 3, 4] # 1- Simple/Declarative, 2 - Imperative, 3 - Interrogative, 4 - Exclamatory 5 - Sound Effects, 6 - Descriptions, 7 - Non-English
-sentimentTags = [1, 2, 3, 4, 5, 6] # 1 - Negative, 2 - Somewhat Negative, 3 - Sarcastic, 4 - Neutral, 5 - Somewhat positive, 6 - Positive
+sentimentTags = [0, 1, 2, 3, 4, 5, 6, 7, 8] # 0 - Narrator, 1 - Negative, 2 - Somewhat Negative, 3 - Sarcastic, 4 - Neutral, 5 - Questioning, 6 - Somewhat positive, 7 - Positive, 8 - Exclamation
 
 def writeToFile(listToWrite, fileName):
     with open(fileName, 'w', newline='') as f:
@@ -96,11 +102,11 @@ def writeToFile(listToWrite, fileName):
 # #   (NP the/DT cat/NN))
 # result.draw() 
 
-grammar1 = nltk.data.load('file:grammars.cfg')
-sent = "Mary saw Bob".split()
-rd_parser = nltk.RecursiveDescentParser(grammar1)
-for tree in rd_parser.parse(sent):
-    print(tree)
+# grammar1 = nltk.data.load('file:grammars.cfg')
+# sent = "Mary saw Bob".split()
+# rd_parser = nltk.RecursiveDescentParser(grammar1)
+# for tree in rd_parser.parse(sent):
+#     print(tree)
 
 
 
